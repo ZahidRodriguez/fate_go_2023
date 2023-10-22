@@ -33,6 +33,20 @@ class Movie {
         required this.voteCount,
     });
 
+    get fullPosterImg{
+      if(this.posterPath != null){
+        return 'http://image.tmdb.org/t/p/w500${this.posterPath}';
+      }
+      return 'http://image.tmdb.org/GNhxO.png';
+    }
+
+    get fullBackdropPath{
+      if(this.backdropPath != null){
+        return 'http://image.tmdb.org/t/p/w500${this.backdropPath}';
+      }
+      return 'http://image.tmdb.org/GNhxO.png';
+    }
+
     factory Movie.fromRawJson(String str) => Movie.fromJson(json.decode(str));
 
     //String toRawJson() => json.encode(toJson());

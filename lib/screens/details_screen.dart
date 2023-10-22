@@ -1,3 +1,4 @@
+import 'package:fate_go_2023/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:fate_go_2023/widgets/casting_slider.dart';
 
@@ -8,14 +9,16 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String movie = ModalRoute.of(context)?.settings.arguments.toString() ?? 'Sin Nombre';
-    return const Scaffold(
+    //Resibir argumento de otra pantalla
+    final Movie movie = ModalRoute.of(context)?.settings.arguments as Movie;
+    return Scaffold(
       body: CustomScrollView(
         //widget con compotramiente predefinido al scroll
         slivers: [
-          _CostumAppBar(),SliverList(delegate: SliverChildListDelegate.fixed(
+          _CostumAppBar(mov: movie),
+          SliverList(delegate: SliverChildListDelegate.fixed(
             [
-              _PosterAndTitle(),
+              _PosterAndTitle(move:movie),
               _Overview(),
               CastingSlider()
             ]
@@ -29,7 +32,8 @@ class DetailsScreen extends StatelessWidget {
   }
 }
 class _CostumAppBar extends StatelessWidget {
-  const _CostumAppBar({super.key});
+  final Movie mov;
+  const _CostumAppBar({super.key, required this.mov});
 
   @override
   Widget build(BuildContext context) {
@@ -52,28 +56,30 @@ class _CostumAppBar extends StatelessWidget {
 
           ),
         ),
-        background: const FadeInImage(
-          placeholder: AssetImage('assets/loading.gif'),
-          image: AssetImage('assets/loading.gif'),
+        background: FadeInImage(
+          placeholder: const AssetImage('assets/loading.gif'),
+          image: NetworkImage(mov.fullBackdropPath),
         ),
       ),
     );
   }
 }
 class _PosterAndTitle extends StatelessWidget {
-  const _PosterAndTitle({super.key});
+  final Movie move;
+  const _PosterAndTitle({super.key, required this.move});
 
   @override
   Widget build(BuildContext context) {
+    String OT=move.originalTitle;
     return Container(
       margin: const EdgeInsets.only(top:20),
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           ClipRRect(borderRadius: BorderRadius.circular(20),
-            child: const FadeInImage(
-                placeholder: AssetImage('assets/no-image.jpeg'),
-                image: AssetImage('assets/no-image.jpeg'),
+            child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpeg'),
+                image: NetworkImage(move.fullPosterImg),
                 height: 250,
               )
           ),
@@ -84,6 +90,7 @@ class _PosterAndTitle extends StatelessWidget {
               children: [
                 Text(
                   'movie.titleOrigin',
+                  
                   style: TextStyle(fontSize: 30),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
